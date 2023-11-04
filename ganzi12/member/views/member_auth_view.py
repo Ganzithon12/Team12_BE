@@ -26,13 +26,43 @@ from rest_framework.generics import CreateAPIView
 
 class SignupView(CreateAPIView):
     serializer_class = SignupSerializer
+    queryset = CustomUser.objects.all()
 
     def create(self, request, *args, **kwargs):
-        password = request.data.get('password')
-        hashed_password = make_password(password)
-        request.data['password'] = hashed_password
+        if CustomUser.objects.filter(username = request.data.get('username')).exists():
+            res = {
+                "msg" : "이미 존재하는 회원 ID"
+            }
+            return Response(res)
+        
+        if CustomUser.objects.filter(nickname = request.data.get('nickname')).exists():
+            res = {
+                "msg" : "이미 존재하는 회원 닉네임"
+            }
+            return Response(res)
+        
+        # password = request.data.get('password')
+        # hashed_password = make_password(password)
+        # request.data['password'] = hashed_password
+        
+        serializer = SignupSerializer(data = request.data)
+        if serializer.is_valid():
+            new_user = serializer.save(password = make_password(serializer.validated_data['password']))
+            auth.login(request, new_user)
 
-        return super(SignupView, self).create(request, *args, **kwargs)
+            user_info = UserInfoSerializer(new_user, context={'request': self.request})
+            
+            res = {
+                "msg" : "회원가입 성공",
+                "data" : user_info.data
+            }
+            return Response(res)
+
+        res = {
+            "msg" : "회원가입 실패",
+        }
+        return Response(res)
+
 
 
 @api_view(['POST'])
@@ -46,7 +76,7 @@ def login(request):
         )
         if user is not None:
             auth.login(request, user)
-            user_data = CustomUserDetailSerializer(user)
+            user_data = UserInfoSerializer(user, context={'request': request})
             res = {
                 "msg" : "로그인 성공",
                 "data" : user_data.data
