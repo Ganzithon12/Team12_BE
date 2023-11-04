@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'password', 'nickname', 'profile_image']
+        fields = ['id', 'username', 'password', 'nickname', 'profile_image', 'point']
 
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -40,4 +40,4 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'nickname', 'profile_image']
+        fields = ['id', 'nickname', 'profile_image', 'point']
