@@ -5,23 +5,34 @@ from rest_framework import status
 from ..serializers import *
 from django.contrib import auth
 from django.contrib.auth.hashers import make_password
+from rest_framework.generics import CreateAPIView
 
-@api_view(['POST'])
-def signup(request):
-    serializer = SignupSerializer(data=request.data)
-    if serializer.is_valid():
-        new_user = serializer.save(password = make_password(serializer.validated_data['password']))
-        auth.login(request, new_user)
-        user_data = CustomUserDetailSerializer(new_user)
-        res = {
-            "msg" : "회원가입 성공",
-            "data" : user_data.data
-        }
-        return Response(res)
-    res = {
-        "msg" : "회원가입 실패"
-    }
-    return Response(res)
+# @api_view(['POST'])
+# def signup(request):
+#     serializer = SignupSerializer(data=request.data)
+#     if serializer.is_valid():
+#         new_user = serializer.save(password = make_password(serializer.validated_data['password']))
+#         auth.login(request, new_user)
+#         user_data = CustomUserDetailSerializer(new_user)
+#         res = {
+#             "msg" : "회원가입 성공",
+#             "data" : user_data.data
+#         }
+#         return Response(res)
+#     res = {
+#         "msg" : "회원가입 실패"
+#     }
+#     return Response(res)
+
+class SignupView(CreateAPIView):
+    serializer_class = SignupSerializer
+
+    def create(self, request, *args, **kwargs):
+        password = request.data.get('password')
+        hashed_password = make_password(password)
+        request.data['password'] = hashed_password
+
+        return super(SignupView, self).create(request, *args, **kwargs)
 
 
 @api_view(['POST'])
