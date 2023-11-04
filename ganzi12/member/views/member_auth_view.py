@@ -50,7 +50,6 @@ class LoginView(TokenObtainPairView):
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == 200:
-            user = self.user
             access_token = response.data['access']
             res = {
                 "msg": "로그인 성공",
