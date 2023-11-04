@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from django.contrib.auth import get_user_model
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +16,17 @@ class SignupSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
-    password = serializers.CharField(max_length=128)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+        User = get_user_model()
+
+        user = User.objects.filter(username=username).first()
+        if user and user.check_password(password):
+            return data
+        raise serializers.ValidationError('Incorrect username or password')
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

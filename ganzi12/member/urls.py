@@ -5,6 +5,5 @@ app_name = 'member'
 
 urlpatterns = [
     path('signup/', SignupView.as_view()),
-    path('login/', login),
-    path('logout/', logout),
+    path('login/', LoginView.as_view()),
 ]
