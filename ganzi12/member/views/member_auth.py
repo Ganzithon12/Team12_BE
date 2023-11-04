@@ -49,3 +49,12 @@ def login(request):
         "msg" : "잘못된 요청"
     }
     return Response(res)
+
+
+@api_view(['POST'])
+def logout(request):
+    auth.logout(request)
+    res = {
+        "msg" : "로그아웃 성공"
+    }
+    return Response(res)
