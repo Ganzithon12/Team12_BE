@@ -28,15 +28,12 @@ class SignupView(CreateAPIView):
         if serializer.is_valid():
             password = make_password(serializer.validated_data['password'])
             new_user = serializer.save(password = password)
-
-            user_info = UserInfoSerializer(new_user, context={'request': self.request})
             
             token = TokenObtainPairSerializer.get_token(new_user)
             
             res = {
                 "msg" : "회원가입 성공",
                 "data" : {
-                    "user_info" : user_info.data,
                     "access_token" : str(token.access_token)
                 }
             }
@@ -46,41 +43,19 @@ class SignupView(CreateAPIView):
             "msg" : "회원가입 실패",
         }
         return Response(res)
-    
-
-class TokenView(TokenObtainPairView):
-    serializer_class = TokenObtainPairSerializer
-
-
-# class CustomLoginView(GenericAPIView):
-#     serializer_class = LoginSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         if serializer.is_valid():
-#             token = serializer.validated_data.get('access')
-#             res = {
-#                 "msg" : "로그인 성공",
-#                 "data" : {
-#                     "access_token" : str(token)
-#                 }
-#             }
-#             return Response(res)
-#         # res = {
-#         #     "msg" : "로그인 실패"
-#         # }
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
+
         if response.status_code == 200:
+            user = self.user
             access_token = response.data['access']
             res = {
                 "msg": "로그인 성공",
                 "data": {
-                    "access_token": access_token,
+                    "access_token" : access_token
                 }
             }
             return Response(res)
