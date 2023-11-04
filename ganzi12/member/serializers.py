@@ -9,6 +9,7 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
 
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
+        model = CustomUser
         fields = ['username', 'password', 'nickname', 'profile_image']
 
 
