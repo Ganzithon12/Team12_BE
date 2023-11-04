@@ -40,7 +40,14 @@ INSTALLED_APPS = [
 
     # 모듈 설치
     'rest_framework',
-    'corsheaders'
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'rest_framework_simplejwt',
+    'corsheaders',
+
 
     # app 등록
 ]
