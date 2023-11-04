@@ -9,13 +9,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 def user_info(request):
     serializer = UserInfoSerializer(request.user)
     data = serializer.data
-    if data["nickname"] == None:
-        res = {
-            "msg" : "유저 정보 불러오기 실패",
-        }
-        return Response(res)
     res = {
         "msg" : "유저 정보 불러오기 성공",
+        "code" : "S-M003",
         "data" : data
     }
     return Response(res)

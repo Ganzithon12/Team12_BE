@@ -14,13 +14,15 @@ class SignupView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         if CustomUser.objects.filter(username = request.data.get('username')).exists():
             res = {
-                "msg" : "이미 존재하는 회원 ID"
+                "msg" : "이미 존재하는 회원 ID",
+                "code" : "F-M001",
             }
             return Response(res)
         
         if CustomUser.objects.filter(nickname = request.data.get('nickname')).exists():
             res = {
-                "msg" : "이미 존재하는 회원 닉네임"
+                "msg" : "이미 존재하는 회원 닉네임",
+                "code" : "F-M002",
             }
             return Response(res)
         
@@ -33,6 +35,7 @@ class SignupView(CreateAPIView):
             
             res = {
                 "msg" : "회원가입 성공",
+                "code" : "S-M001",
                 "data" : {
                     "access_token" : str(token.access_token)
                 }
@@ -41,6 +44,7 @@ class SignupView(CreateAPIView):
 
         res = {
             "msg" : "회원가입 실패",
+            "code" : "F-M003",
         }
         return Response(res)
 
@@ -53,12 +57,14 @@ class LoginView(TokenObtainPairView):
             access_token = response.data['access']
             res = {
                 "msg": "로그인 성공",
+                "code" : "S-M002",
                 "data": {
                     "access_token" : access_token
                 }
             }
             return Response(res)
         res = {
-            "msg" : "로그인 실패"
+            "msg" : "로그인 실패",
+            "code" : "F-M004",
         }
         return Response(res)
