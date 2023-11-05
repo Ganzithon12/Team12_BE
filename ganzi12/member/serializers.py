@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token 
 
 
@@ -21,19 +21,22 @@ class SignupSerializer(serializers.ModelSerializer):
         if data['password']!= data['password2']:
             raise serializers.ValidationError(
                 {"password": "Passwords don't match."})
-        
         return data
     
     def create(self, validated_data):
+        password = validated_data['password']
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
             nickname=validated_data['nickname'],
+            password=password  # 사용자가 입력한 패스워드를 사용
         )
-        password=validated_data['password']
-        user.set_password(password)
-        user.save()
+
+        print(f"New user email: {user.email}")
+        print(f"New user password: {validated_data['password']}")
+
         token = Token.objects.create(user=user)
         return user
+
     
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -44,10 +47,10 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
         User = get_user_model()
 
-        user = User.objects.filter(email=email).first()
-        if user and user.check_password(password):
+        user = authenticate(request=self.context['request'], email=email, password=password)
+        if user:
             return data
-        raise serializers.ValidationError('Incorrect email or password')
+        raise serializers.ValidationError('Incorrect username or password')
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

@@ -16,11 +16,12 @@ class CustomUserManager(BaseUserManager):
         user = self.model(
             email = self.normalize_email(email),
             nickname = nickname,
+            **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
-
+    
     # 관리자 user 생성
     def create_superuser(self, email, nickname, password=None):
         user = self.create_user(
