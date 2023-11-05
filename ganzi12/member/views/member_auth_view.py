@@ -1,18 +1,22 @@
 from ..models import CustomUser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from ..serializers import *
+from rest_framework import status
+from django.contrib.auth import get_user_model, authenticate
+from ..serializers import LoginSerializer, SignupSerializer, UserInfoSerializer, CustomUserDetailSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework.generics import CreateAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import authenticate
 
 class SignupView(CreateAPIView):
     serializer_class = SignupSerializer
     queryset = CustomUser.objects.all()
 
     def create(self, request, *args, **kwargs):
-        if CustomUser.objects.filter(username = request.data.get('username')).exists():
+
+        if CustomUser.objects.filter(email = request.data.get('email')).exists():
             res = {
                 "msg" : "이미 존재하는 회원 ID",
                 "code" : "F-M001",
@@ -50,21 +54,31 @@ class SignupView(CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+    serializer_class = TokenObtainPairSerializer
 
-        if response.status_code == 200:
-            access_token = response.data['access']
-            res = {
-                "msg": "로그인 성공",
-                "code" : "S-M002",
-                "data": {
-                    "access_token" : access_token
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        User = get_user_model()
+        
+        user = User.objects.filter(email=email).first()
+        if user and user.check_password(password):
+            # 사용자가 존재하고 패스워드가 올바른 경우에만 토큰 생성
+            response = super().post(request, *args, **kwargs)
+            if response.status_code == status.HTTP_200_OK:
+                access_token = response.data['access']
+                res = {
+                    "msg": "로그인 성공",
+                    "code": "S-M002",
+                    "data": {
+                        "access_token": access_token
+                    }
                 }
-            }
-            return Response(res)
+                return Response(res)
+        
+        # 로그인 실패
         res = {
-            "msg" : "로그인 실패",
-            "code" : "F-M004",
+            "msg": "로그인 실패",
+            "code": "F-M004",
         }
-        return Response(res)
+        return Response(res, status=status.HTTP_401_UNAUTHORIZED)
