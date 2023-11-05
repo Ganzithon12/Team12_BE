@@ -12,7 +12,8 @@ class SignupView(CreateAPIView):
     queryset = CustomUser.objects.all()
 
     def create(self, request, *args, **kwargs):
-        if CustomUser.objects.filter(username = request.data.get('username')).exists():
+
+        if CustomUser.objects.filter(email = request.data.get('email')).exists():
             res = {
                 "msg" : "이미 존재하는 회원 ID",
                 "code" : "F-M001",
