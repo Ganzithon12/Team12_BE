@@ -62,6 +62,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.profile_image.url)
         return None
 
+    def update(self, instance, validated_data):
+        instance.point = validated_data.get('point', instance.point)
+        instance.save()
+        return instance  
+
     class Meta:
         model = CustomUser
         fields = ['id', 'nickname', 'profile_image', 'point']
