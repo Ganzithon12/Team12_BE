@@ -28,7 +28,7 @@ class SignupSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
             nickname=validated_data['nickname'],
-            password=password  # 사용자가 입력한 패스워드를 사용
+            password=password
         )
 
         print(f"New user email: {user.email}")
