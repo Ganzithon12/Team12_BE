@@ -17,12 +17,7 @@ class MissionCompleted(models.Model):
     writer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     mission_image = models.ImageField(verbose_name='missionCompleted', blank=False)
     status = models.BooleanField(default=False)
-    completion_date = models.DateField()
-
-    def save(self, *args, **kwargs):
-        if not self.completion_date:
-            self.completion_date = timezone.now().date()
-        super().save(*args, **kwargs)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.writer} - {self.mission} ({self.completion_date.strftime('%Y%m%d')})"
+        return f"{self.writer} - {self.mission} ({self.created_at})"

@@ -11,9 +11,11 @@ class MissionSerializer(ModelSerializer):
         fields = ['mission_id', 'title', 'point', 'mission_logo']
 
 class CompletedSerializer(ModelSerializer):
-    mission = serializers.ReadOnlyField(source = 'mission.title')
-    writer = serializers.ReadOnlyField(source = 'writer.nickname')
+    mission = serializers.PrimaryKeyRelatedField(queryset=Mission.objects.all())
+    writer = serializers.ReadOnlyField(source='writer.nickname')
+    status = serializers.BooleanField(default=True, read_only=True)
+    created_at = serializers.DateTimeField(default=timezone.now, read_only=True)
 
     class Meta:
         model = MissionCompleted
-        fields = ['mission_image', 'status', 'completion_date']
+        fields = ['mission', 'mission_image', 'writer', 'status', 'created_at']
