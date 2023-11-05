@@ -1,11 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, Group, Permission, BaseUserManager
+from rest_framework.authtoken.models import Token
 
 
 def user_photo_path(instance, filename):
     return f'profile_image/{filename}'
 
 class CustomUserManager(BaseUserManager):
+    # 일반 user 생성
     def create_user(self, email, nickname, password=None, **extra_fields):
         if not email:
             raise ValueError('must have user email')
@@ -15,27 +17,48 @@ class CustomUserManager(BaseUserManager):
             email = self.normalize_email(email),
             nickname = nickname,
         )
-        user = self.model(nickname=nickname, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, nickname, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+    # 관리자 user 생성
+    def create_superuser(self, email, nickname, password=None):
+        user = self.create_user(
+            email = email,
+            password = password,
+            nickname= nickname,
+        )
+        token = Token.objects.create(user=user)
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self.create_user(email, nickname, password, **extra_fields)
-
-class CustomUser(AbstractUser):
-    email = models.EmailField(default='', unique=True)
+class CustomUser(AbstractBaseUser):
+    email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
     nickname = models.CharField(max_length=100)
     profile_image = models.ImageField(upload_to=user_photo_path, null = True, blank = True)
     point = models.IntegerField(default=10000)
+
+    is_active = models.BooleanField(default=True)    
+    is_admin = models.BooleanField(default=False)
+    
+    @property
+    def is_superuser(self):
+        return self.is_admin
+
+    @property
+    def is_staff(self):
+       return self.is_admin
+
+    def has_perm(self, perm, obj=None):
+       return self.is_admin
+
+    def has_module_perms(self, app_label):
+       return self.is_admin
+
+    @is_staff.setter
+    def is_staff(self, value):
+        self._is_staff = value
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname']
