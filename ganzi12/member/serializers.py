@@ -5,28 +5,28 @@ from django.contrib.auth import get_user_model
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'password', 'nickname', 'profile_image', 'point']
+        fields = ['id', 'email', 'password', 'nickname', 'profile_image', 'point']
 
 
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'password', 'nickname', 'profile_image']
+        fields = ['email', 'password', 'nickname', 'profile_image']
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
+    email = serializers.CharField(max_length=150)
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        username = data.get('username')
+        email = data.get('email')
         password = data.get('password')
         User = get_user_model()
 
-        user = User.objects.filter(username=username).first()
+        user = User.objects.filter(email=email).first()
         if user and user.check_password(password):
             return data
-        raise serializers.ValidationError('Incorrect username or password')
+        raise serializers.ValidationError('Incorrect email or password')
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
