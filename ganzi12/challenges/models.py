@@ -1,5 +1,5 @@
 from django.db import models
-from ..member.models import *
+from member.models import *
 
 # Create your models here.
 class Challenge(models.Model):
@@ -20,7 +20,7 @@ class Challenge(models.Model):
 class ChallengeCompleted(models.Model):
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
     writer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    challenge_image = models.ImageField(blang = False, upload_to=f"challenges/{challenge.title}")
+    challenge_image = models.ImageField(blank = False, upload_to=f"challenges/{challenge}")
     created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
