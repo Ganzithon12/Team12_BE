@@ -11,6 +11,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 
 class SignupView(CreateAPIView):
+    """
+    회원가입 view
+    """
     serializer_class = SignupSerializer
     queryset = CustomUser.objects.all()
 
@@ -54,6 +57,9 @@ class SignupView(CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
+    """
+    로그인 view
+    """
     serializer_class = TokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
