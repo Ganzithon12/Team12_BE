@@ -26,4 +26,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('member/', include('member.urls')),
     path('mission/', include('missions.urls')),
+    path('challenge/', include('challenges.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
