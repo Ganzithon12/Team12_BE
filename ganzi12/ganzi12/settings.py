@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # app 등록
     'member',
     'missions',
+    'challenges',
 ]
 
 MIDDLEWARE = [
