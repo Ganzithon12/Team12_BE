@@ -10,8 +10,7 @@ class ParticipateChallenge(APIView):
     """
     authentication_classes = [JWTAuthentication]
     
-    def post(self, request):
-        challenge_id = self.kwargs['challenge_id']
+    def post(self, request, challenge_id):
         challenge = Challenge.objects.get(pk = challenge_id)
         user = self.request.user
 

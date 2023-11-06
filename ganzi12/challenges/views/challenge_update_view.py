@@ -2,20 +2,17 @@ from rest_framework.response import Response
 from ..serializers import *
 from ..models import *
 from rest_framework.decorators import api_view, authentication_classes
-from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 
-class CreateChallenge(CreateAPIView):
+class CreateChallenge(APIView):
     """
     챌린지 생성 view
     """
-    serializer_class = ChallengeSerializer
-    queryset = Challenge.objects.all()
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAdminUser]
 
-    def create(self, request):
+    def post(self, request):
         user = self.request.user
         if not user.is_admin:
             res = {
@@ -35,6 +32,7 @@ class CreateChallenge(CreateAPIView):
             return Response(res)
         res = {
             "msg" : "잘못된 요청",
-            "code" : "F-C002"
+            "code" : "F-C002",
+            "errors" : serializer.errors
         }
         return Response(res)

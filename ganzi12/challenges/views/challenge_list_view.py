@@ -12,8 +12,8 @@ class ChallengeList(APIView):
     """
     챌린지 목록
     """
-    def get(self, request):
-        state = self.kwargs['state']
+    def get(self, request, state):
+        # state = self.kwargs['state']
         now = timezone.now().date()
         if state == "pre":
             challenges = Challenge.objects.filter(start_at__gt = now)
