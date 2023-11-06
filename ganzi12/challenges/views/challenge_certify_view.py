@@ -24,11 +24,16 @@ class CreateCertify(APIView):
                 "code" : "F-C003"
             }
             return Response(res)
-        
-        certification = ChallengeCompleted(writer = user, challenge = challenge, challenge_image = request.data['challenge_image'])
-        certification.save()
-        res = {
-            "msg" : "챌린지 인증 성공",
-            "code" : "S-C002"
-        }
-        return Response(res)
+        try:
+            certification = ChallengeCompleted(writer = user, challenge = challenge, challenge_image = request.data['challenge_image'])
+            certification.save()
+            res = {
+                "msg" : "챌린지 인증 성공",
+                "code" : "S-C002"
+            }
+            return Response(res)
+        except:
+            res = {
+                "msg" : "잘못된 요청",
+                "code" : "F-C008"
+            }
