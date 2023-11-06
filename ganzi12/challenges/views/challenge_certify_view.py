@@ -37,3 +37,4 @@ class CreateCertify(APIView):
                 "msg" : "잘못된 요청",
                 "code" : "F-C008"
             }
+            return Response(res)
