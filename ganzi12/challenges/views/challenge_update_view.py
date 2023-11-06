@@ -4,3 +4,35 @@ from ..models import *
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.generics import CreateAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+class CreateChallenge(CreateAPIView):
+    """
+    챌린지 생성 view
+    """
+    serializer_class = ChallengeSerializer
+    queryset = Challenge.objects.all()
+    authentication_classes = [JWTAuthentication]
+
+    def create(self, request):
+        user = self.request.user
+        if not user.is_admin:
+            res = {
+                "msg" : "관리자가 아닌 사용자 접근",
+                "code" : "F-C001"
+            }
+            return Response(res)
+        
+        serializer = ChallengeSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            res = {
+                "msg" : "새로운 챌린지 등록 성공",
+                "code" : "S-C001"
+            }
+            return Response(res)
+        res = {
+            "msg" : "잘못된 요청",
+            "code" : "F-C002"
+        }
+        return Response(res)
