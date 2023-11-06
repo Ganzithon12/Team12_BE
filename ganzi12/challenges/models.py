@@ -10,6 +10,8 @@ class Challenge(models.Model):
     period = models.IntegerField(null = False)
     challengers = models.ManyToManyField(CustomUser, related_name="challengers", null = True)
     challenge_logo = models.ImageField(blank = True, null = True, upload_to='challenge_image')
+    maximum_num = models.IntegerField(null = False)
+    current_num = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
