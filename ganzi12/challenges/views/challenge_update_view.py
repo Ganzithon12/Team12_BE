@@ -4,6 +4,7 @@ from ..models import *
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.generics import CreateAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import permissions
 
 class CreateChallenge(CreateAPIView):
     """
@@ -12,6 +13,7 @@ class CreateChallenge(CreateAPIView):
     serializer_class = ChallengeSerializer
     queryset = Challenge.objects.all()
     authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAdminUser]
 
     def create(self, request):
         user = self.request.user
