@@ -38,6 +38,7 @@ class ParticipateChallenge(APIView):
 
         challenge.challengers.add(user)
         challenge.current_num += 1
+        challenge.sum_point += challenge.entry_fee
         challenge.save()
         
         user.point -= challenge.entry_fee
