@@ -17,10 +17,10 @@ class ChallengeList(APIView):
         now = timezone.now().date()
         if state == "pre":
             challenges = Challenge.objects.filter(start_at__gt = now)
-            msg = "개최 전인 챌린지 불러오기 성공"
+            msg = "참가 가능한 챌린지 불러오기 성공"
         elif state == "now":
             challenges = Challenge.objects.filter(Q(start_at__lt = now)&Q(finish_at__gt = now))
-            msg = "개최 중인 챌린지 불러오기 성공"
+            msg = "진행중인 챌린지 불러오기 성공"
         elif state == "post":
             challenges = Challenge.objects.filter(finish_at__lt = now)
             msg = "종료된 챌린지 불러오기 성공"
