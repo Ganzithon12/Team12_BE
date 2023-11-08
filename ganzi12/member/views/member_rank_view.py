@@ -24,4 +24,23 @@ class RankView(APIView):
 
         result = df[['rank', 'id', 'nickname', 'profile_image', 'point']].to_dict(orient = 'records')
 
-        return Response(result)
+        for member in result:
+            if member['id'] == user_pk:
+                user = member
+        
+        percentage = user['rank']/len(result) * 100
+        update_per = {
+            "percentage" : percentage
+        }
+
+        user.update(update_per)
+
+        res = {
+            "msg" : "랭킹 리스트 불러오기 성공",
+            "code" : "S-M004",
+            "data" : {
+                "user" : user,
+                "rank_list" : result
+            }
+        }
+        return Response(res)
