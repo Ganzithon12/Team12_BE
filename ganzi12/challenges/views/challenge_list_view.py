@@ -62,7 +62,7 @@ class ChallengeInfo(APIView):
         
         res = {
             "msg" : "챌린지 조회 성공",
-            "code" : "S-C004",
+            "code" : "S-C005",
             "data" : data
         }
         
