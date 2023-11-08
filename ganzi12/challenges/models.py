@@ -7,7 +7,7 @@ class Challenge(models.Model):
     entry_fee = models.IntegerField(null = False)
     start_at = models.DateField(auto_now = False, auto_now_add = False)
     finish_at = models.DateField(auto_now = False, auto_now_add = False)
-    period = models.IntegerField(null = False)
+    period = models.IntegerField(default = 0)
     challengers = models.ManyToManyField(CustomUser, related_name="challengers", null = True)
     challenge_logo = models.ImageField(blank = True, null = True, upload_to='challenge_image')
     maximum_num = models.IntegerField(null = False)
@@ -16,6 +16,11 @@ class Challenge(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        days = self.finish_at - self.start_at
+        self.period = days.days + 1
+        super(Challenge, self).save(*args, **kwargs)
     
 class ChallengeCompleted(models.Model):
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
