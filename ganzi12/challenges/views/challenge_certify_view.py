@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 class CreateCertify(APIView):
     """
@@ -38,3 +39,27 @@ class CreateCertify(APIView):
                 "code" : "F-C008"
             }
             return Response(res)
+        
+
+class CertifyList(APIView):
+    """
+    특정 챌린지에 대한 인증 조회
+    """
+    
+    def get(self, request, challenge_id):
+        challenge = get_object_or_404(Challenge, pk = challenge_id)
+        certifies = ChallengeCompleted.objects.filter(challenge = challenge)
+        certifies_list = ChallengeCompletedSerializer(certifies, many = True).data
+        if certifies_list:
+            res = {
+                "msg" : "챌린지 인증 조회 성공",
+                "code" : "S-C006",
+                "data" : certifies_list
+            }
+        else:
+            res = {
+                "msg" : "해당 챌린지에 등록된 인증 없음",
+                "code" : "S-C007"
+            }
+        
+        return Response(res)
