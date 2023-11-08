@@ -18,10 +18,10 @@ class RankView(APIView):
 
         df = pd.DataFrame(members)
 
-        df['rank'] = df['point'].rank(ascending=False, method = min)
+        df['rank'] = df['point'].rank(ascending=False, method = 'min').astype(int)
 
         df = df.sort_values(by = 'rank')
 
-        result = df['id', 'nickname', 'profile_image', 'point'].to_dict(orient = 'records')
+        result = df[['rank', 'id', 'nickname', 'profile_image', 'point']].to_dict(orient = 'records')
 
         return Response(result)
