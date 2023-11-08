@@ -11,3 +11,8 @@ class ChallengeCompletedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChallengeCompleted
         fields = '__all__'
+
+class ChallengeDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Challenge
+        fields = '__all__'
