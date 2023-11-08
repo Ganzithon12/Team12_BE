@@ -10,10 +10,6 @@ class MissionSerializer(ModelSerializer):
         fields = ['mission_id', 'title', 'point', 'mission_logo']
 
 class CompletedSerializer(ModelSerializer):
-    class UserInfoSerializer(serializers.ModelSerializer):
-        class Meta:
-            model=CustomUser
-            fields=['nickname', 'point']
             
     mission = serializers.PrimaryKeyRelatedField(queryset=Mission.objects.all())
     writer = serializers.ReadOnlyField(source='writer.nickname')
