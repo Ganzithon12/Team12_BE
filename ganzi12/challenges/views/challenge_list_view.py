@@ -38,3 +38,19 @@ class ChallengeList(APIView):
             "data" : serializer.data
         }
         return Response(res)
+
+
+class ChallengeInfo(APIView):
+    """
+    특정 챌린지 정보 조회 view
+    """
+    def get(self, request, challenge_id):
+        challenge = Challenge.objects.get(pk = challenge_id)
+        data = ChallengeDetailSerializer(challenge).data
+        res = {
+            "msg" : "챌린지 조회 성공",
+            "code" : "S-C004",
+            "data" : data
+        }
+        
+        return Response(res)
