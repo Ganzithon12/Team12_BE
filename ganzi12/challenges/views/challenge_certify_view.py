@@ -7,6 +7,7 @@ from rest_framework import permissions
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from datetime import date
+from django.db.models import Q
 
 class CreateCertify(APIView):
     """
@@ -105,6 +106,29 @@ class ChallengersInfoList(APIView):
             "msg" : "챌린지 참가자들의 정보 불러오기 성공",
             "code" : "S-009",
             "data" : data
+        }
+
+        return Response(res)
+    
+
+class MyCertifies(APIView):
+    """
+    내 인증 개수
+    """
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request, challenge_id):
+        user = self.request.user
+        challenge = get_object_or_404(Challenge, pk = challenge_id)
+
+        cnt = ChallengeCompleted.objects.filter(Q(challenge = challenge)&Q(writer = user)).count()
+
+        res = {
+            "msg" : "유저의 인증 개수 불러오기 성공",
+            "code" : "S-010",
+            "data" : {
+                "cnt" : cnt
+            }
         }
 
         return Response(res)
