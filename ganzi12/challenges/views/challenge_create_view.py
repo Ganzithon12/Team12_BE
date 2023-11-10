@@ -10,16 +10,16 @@ class CreateChallenge(APIView):
     """
     챌린지 생성 view
     """
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
 
     def post(self, request):
         user = self.request.user
-        if not user.is_admin:
-            res = {
-                "msg" : "관리자가 아닌 사용자 접근",
-                "code" : "F-C001"
-            }
-            return Response(res)
+        # if not user.is_admin:
+        #     res = {
+        #         "msg" : "관리자가 아닌 사용자 접근",
+        #         "code" : "F-C001"
+        #     }
+        #     return Response(res)
         
         serializer = ChallengeSerializer(data = request.data)
         if serializer.is_valid():
