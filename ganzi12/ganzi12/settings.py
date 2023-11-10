@@ -228,5 +228,5 @@ IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic
 AUTH_USER_MODEL = 'member.CustomUser'
 
 CRONJOBS = [
-    ('0 0 * * *', 'challenges.tasks.distribute_point', '>> '+os.path.join(BASE_DIR, 'config/log/cron.log')+' 2>&1 '),
+    ('0 0 * * *', 'challenges.tasks.distribute_point', '>> '+os.path.join(BASE_DIR, 'challenges/distribute_log.log')+' 2>&1 '),
 ]
