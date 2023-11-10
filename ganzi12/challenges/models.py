@@ -1,7 +1,7 @@
 from django.db import models
 from member.models import *
 
-# Create your models here.
+
 class Challenge(models.Model):
     title = models.CharField(max_length=128)
     entry_fee = models.IntegerField(null = False)

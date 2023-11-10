@@ -62,13 +62,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
-    profile_image = serializers.SerializerMethodField()
-
-    def get_profile_image(self, obj):
-        if obj.profile_image:
-            request = self.context.get('request')
-            return request.build_absolute_uri(obj.profile_image.url)
-        return None
 
     def update(self, instance, validated_data):
         instance.point = validated_data.get('point', instance.point)
