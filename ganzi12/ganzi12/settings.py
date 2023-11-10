@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',
+    'django_crontab',
 
 
     # app 등록
@@ -225,3 +226,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'
 
 AUTH_USER_MODEL = 'member.CustomUser'
+
+CRONJOBS = [
+    ('0 0 * * *', 'challenges.tasks.distribute_point', '>> '+os.path.join(BASE_DIR, 'config/log/cron.log')+' 2>&1 '),
+]
