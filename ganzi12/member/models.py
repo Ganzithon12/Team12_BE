@@ -4,9 +4,6 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
 
 
-def user_photo_path(instance, filename):
-    return f'profile_image/{filename}'
-
 class CustomUserManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, email, nickname, password=None, **extra_fields):
@@ -38,7 +35,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser):
     email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
     nickname = models.CharField(max_length=100)
-    profile_image = models.ImageField(upload_to=user_photo_path, null = True, blank = True)
+    profile_image = models.ImageField(verbose_name='profile_image', upload_to='profile_image', null = True, blank = True)
     point = models.IntegerField(default=10000)
 
     is_active = models.BooleanField(default=True)    

@@ -15,7 +15,7 @@ class Mission(models.Model):
 class MissionCompleted(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
     writer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    mission_image = models.ImageField(verbose_name='missionCompleted', blank=False)
+    mission_image = models.ImageField(verbose_name='missionCompleted', blank=False, upload_to='completed_image')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

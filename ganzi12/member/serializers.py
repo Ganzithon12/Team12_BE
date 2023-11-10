@@ -25,13 +25,21 @@ class SignupSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         password = validated_data['password']
+        profile_image = validated_data.pop('profile_image', None)
+
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
             nickname=validated_data['nickname'],
             password=password
         )
 
+        if profile_image:
+            user.profile_image = profile_image
+            user.save()
+
+
         print(f"New user email: {user.email}")
+        print(f"New user profile_image: {user.profile_image}")
         print(f"New user password: {validated_data['password']}")
 
         token = Token.objects.create(user=user)
