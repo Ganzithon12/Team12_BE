@@ -5,14 +5,19 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
-class CreateChallenge(APIView):
+
+class ChallengeViewSet(ModelViewSet):
     """
     챌린지 생성 view
     """
     # authentication_classes = [JWTAuthentication]
+    queryset = Challenge.objects.all()
+    serializer_class = ChallengeSerializer
 
-    def post(self, request):
+    def create(self, request):
         user = self.request.user
         # if not user.is_admin:
         #     res = {
@@ -36,3 +41,4 @@ class CreateChallenge(APIView):
             "errors" : serializer.errors
         }
         return Response(res)
+    
