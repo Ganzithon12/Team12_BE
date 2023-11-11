@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_crontab',
 
-
     # app 등록
     'member',
     'missions',
