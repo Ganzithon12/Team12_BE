@@ -67,6 +67,13 @@ class UserInfoSerializer(serializers.ModelSerializer):
         instance.point = validated_data.get('point', instance.point)
         instance.save()
         return instance  
+    
+    def get_profile_image(self, obj):
+        if self.context and 'request' in self.context:
+            request = self.context['request']
+            if request:
+                return request.build_absolute_uri(obj.profile_image.url)
+        return None
 
     class Meta:
         model = CustomUser
