@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 
 class CustomUserManager(BaseUserManager):
     # 일반 user 생성
+    
     def create_user(self, email, nickname, password=None, **extra_fields):
         if not email:
             raise ValueError('must have user email')
