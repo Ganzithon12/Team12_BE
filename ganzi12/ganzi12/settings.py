@@ -16,6 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'ganzi-tkzxf.run.goorm.io',
+    '43.200.176.228',
     ]
 
 
